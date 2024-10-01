@@ -12,6 +12,7 @@ export default createStore({
   mutations: {
     ADD_NOTE(state, note) {
       state.notes.active.push(note);
+      console.log(state.notes.active)
     },
     MOVE_NOTE(state, { note, from, to }) {
       const index = state.notes[from].indexOf(note);

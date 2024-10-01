@@ -1,17 +1,37 @@
 <script setup>
-  import { computed } from "vue";
+  import { computed, onMounted } from "vue";
   import { useStore } from "vuex";
+  import NoteForm from "../components/NoteForm.vue";
+  import dayjs from "dayjs";
+  import { DeleteOutlined } from "@ant-design/icons-vue";
 
   const store = useStore();
 
+  // Getters de notas
   const activeNotes = computed(() => store.getters.activeNotes);
   const completedNotes = computed(() => store.getters.completedNotes);
   const expiredNotes = computed(() => store.getters.expiredNotes);
 
+// Verificar si la nota está expirada
+const checkExpiredNotes = () => {
+  const now = dayjs().format("YYYY-MM-DD");
+  activeNotes.value.forEach(note => {
+    if (dayjs(note.dueDate).isBefore(now)) {
+      store.dispatch("moveNote", { note, from: "active", to: "expired" });
+    }
+  });
+};
+
+// Ejecutar al montar el componente
+onMounted(() => {
+  checkExpiredNotes();
+});
+
+
+  // Manejadores de eventos para drag and drop
   let draggedNote = null;
   let draggedFrom = null;
 
-  // Drag event handlers
   const onDragStart = (event, note, fromColumn) => {
     draggedNote = note;
     draggedFrom = fromColumn;
@@ -69,7 +89,8 @@
             <h4 class="font-bold">{{ note.title }}</h4>
             <p>{{ note.description }}</p>
           </div>
-          <button class="bg-yellow-500 text-white p-2 rounded">Edit</button>
+
+          <NoteForm :notes="note" />
         </div>
 
         <div class="flex items-center justify-between">
@@ -113,7 +134,6 @@
             <h4 class="font-bold">{{ note.title }}</h4>
             <p>{{ note.description }}</p>
           </div>
-          <button class="bg-yellow-500 text-white p-2 rounded">Edit</button>
         </div>
 
         <div class="flex items-center justify-between">
@@ -157,12 +177,14 @@
             <h4 class="font-bold">{{ note.title }}</h4>
             <p>{{ note.description }}</p>
           </div>
-          <button
-            class="bg-red-500 text-white p-2 rounded"
+
+          <a-button
             @click="deleteNote(note)"
-          >
-            Delete
-          </button>
+            class="flex items-center justify-center text-lg"
+            danger
+            type="text"
+            ><DeleteOutlined
+          /></a-button>
         </div>
 
         <div class="flex items-center justify-between">

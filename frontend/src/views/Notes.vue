@@ -33,6 +33,19 @@
   const onDragOver = (event) => {
     event.preventDefault();
   };
+
+  const deleteNote = (note) => {
+    store.dispatch("deleteNote", note);
+  };
+
+  const colors = ["pink", "red", "orange", "green", "cyan", "blue", "purple"];
+  let colorIndex = 0;
+
+  const getRandomColor = () => {
+    const color = colors[colorIndex];
+    colorIndex = (colorIndex + 1) % colors.length;
+    return color;
+  };
 </script>
 
 <template>
@@ -56,15 +69,27 @@
             <h4 class="font-bold">{{ note.title }}</h4>
             <p>{{ note.description }}</p>
           </div>
+          <button class="bg-yellow-500 text-white p-2 rounded">Edit</button>
         </div>
 
-        <div class="flex flex-col items-end space-y-2">
-          <small class="bg-green-100 p-2 rounded cursor-pointer"
-            >Created: {{ note.createdAt }}</small
-          >
-          <small class="bg-red-100 p-2 rounded cursor-pointer"
-            >Due: {{ note.dueDate }}</small
-          >
+        <div class="flex items-center justify-between">
+          <div>
+            <a-tag
+              v-for="(tag, index) in note.tags"
+              :key="index"
+              :color="getRandomColor()"
+              >{{ tag }}</a-tag
+            >
+          </div>
+
+          <div class="flex flex-col items-end space-y-2">
+            <small class="bg-green-100 p-2 rounded cursor-pointer"
+              >Created: {{ note.createdAt }}</small
+            >
+            <small class="bg-red-100 p-2 rounded cursor-pointer"
+              >Due: {{ note.dueDate }}</small
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -88,15 +113,27 @@
             <h4 class="font-bold">{{ note.title }}</h4>
             <p>{{ note.description }}</p>
           </div>
+          <button class="bg-yellow-500 text-white p-2 rounded">Edit</button>
         </div>
 
-        <div class="flex flex-col items-end space-y-2">
-          <small class="bg-green-100 p-2 rounded cursor-pointer"
-            >Created: {{ note.createdAt }}</small
-          >
-          <small class="bg-red-100 p-2 rounded cursor-pointer"
-            >Due: {{ note.dueDate }}</small
-          >
+        <div class="flex items-center justify-between">
+          <div>
+            <a-tag
+              v-for="(tag, index) in note.tags"
+              :key="index"
+              :color="getRandomColor()"
+              >{{ tag }}</a-tag
+            >
+          </div>
+
+          <div class="flex flex-col items-end space-y-2">
+            <small class="bg-green-100 p-2 rounded cursor-pointer"
+              >Created: {{ note.createdAt }}</small
+            >
+            <small class="bg-red-100 p-2 rounded cursor-pointer"
+              >Due: {{ note.dueDate }}</small
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -112,7 +149,7 @@
         v-for="(note, index) in expiredNotes"
         :key="index"
         class="bg-white p-4 rounded-lg shadow mb-2 w-full"
-        draggable="true"
+        draggable="false"
         @dragstart="onDragStart($event, note, 'expired')"
       >
         <div class="flex items-center justify-between">
@@ -120,15 +157,32 @@
             <h4 class="font-bold">{{ note.title }}</h4>
             <p>{{ note.description }}</p>
           </div>
+          <button
+            class="bg-red-500 text-white p-2 rounded"
+            @click="deleteNote(note)"
+          >
+            Delete
+          </button>
         </div>
 
-        <div class="flex flex-col items-end space-y-2">
-          <small class="bg-green-100 p-2 rounded cursor-pointer"
-            >Created: {{ note.createdAt }}</small
-          >
-          <small class="bg-red-100 p-2 rounded cursor-pointer"
-            >Due: {{ note.dueDate }}</small
-          >
+        <div class="flex items-center justify-between">
+          <div>
+            <a-tag
+              v-for="(tag, index) in note.tags"
+              :key="index"
+              :color="getRandomColor()"
+              >{{ tag }}</a-tag
+            >
+          </div>
+
+          <div class="flex flex-col items-end space-y-2">
+            <small class="bg-green-100 p-2 rounded cursor-pointer"
+              >Created: {{ note.createdAt }}</small
+            >
+            <small class="bg-red-100 p-2 rounded cursor-pointer"
+              >Due: {{ note.dueDate }}</small
+            >
+          </div>
         </div>
       </div>
     </div>

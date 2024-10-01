@@ -12,7 +12,7 @@ const routes = [
       {
         path: "",
         component: () => import("../views/Notes.vue"),
-      }
+      },
     ],
   },
   {
@@ -27,7 +27,7 @@ const routes = [
         component: () => import("../components/auth/Login.vue"),
       },
       {
-        path: "/register",
+        path: "register",
         component: () => import("../components/auth/Register.vue"),
       },
     ],

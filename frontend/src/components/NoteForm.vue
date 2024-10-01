@@ -1,14 +1,22 @@
 <script setup>
-  import { ref, reactive, nextTick } from "vue";
+  import { ref, reactive, nextTick, onMounted } from "vue";
   import {
     UserOutlined,
     DiffOutlined,
     InfoCircleOutlined,
     PlusOutlined,
+    EditOutlined,
   } from "@ant-design/icons-vue";
   import { message } from "ant-design-vue";
   import dayjs from "dayjs";
   import { useStore } from "vuex";
+
+  const props = defineProps({
+    notes: {
+      type: Object,
+      required: false,
+    },
+  });
 
   const inputRef = ref();
   const open = ref(false);
@@ -32,25 +40,31 @@
 
   const handleOk = () => {
     confirmLoading.value = true;
-     const date = dayjs(form.dueDate).format("YYYY-MM-DD");
+    const date = dayjs(form.dueDate).format("YYYY-MM-DD");
 
-    const newNote = {
+    const note = {
+      id: props.notes?.id || Date.now(),
       title: form.title,
       description: form.description,
       dueDate: date,
       user: form.user,
       tags: form.tags,
-      createdAt: dayjs().format("YYYY-MM-DD"),
+      createdAt: props.notes?.createdAt || dayjs().format("YYYY-MM-DD"),
     };
 
-    store.dispatch("addNote", newNote);
+    if (props.notes) {
+      console.log("Updated note to be saved:", note);
+      store.dispatch("editNote", note);
+      message.success("Note edited successfully");
+    } else {
+      store.dispatch("addNote", note);
+      message.success("Note added successfully");
+    }
 
     setTimeout(() => {
       resetForm();
       open.value = false;
       confirmLoading.value = false;
-      console.log(newNote)
-      message.success("Note added successfully!");
     }, 1000);
   };
 
@@ -86,15 +100,36 @@
     form.user = "";
     form.tags = [];
   };
+
+  onMounted(() => {
+    if (props.notes) {
+      const date = dayjs(props.notes.dueDate, "YYYY-MM-DD");
+
+      form.title = props.notes.title;
+      form.description = props.notes.description;
+      form.dueDate = date;
+      form.user = props.notes.user;
+      form.tags = props.notes.tags;
+    }
+  });
 </script>
 <template>
   <a-button
+    v-if="props.notes"
     @click="showModal"
     type="primary"
     class="flex items-center justify-center space-x-1"
   >
-    Add Note <DiffOutlined
-  /></a-button>
+    <EditOutlined />
+  </a-button>
+  <a-button
+    v-else
+    @click="showModal"
+    type="primary"
+    class="flex items-center justify-center space-x-1"
+  >
+    Add Note <DiffOutlined />
+  </a-button>
   <a-modal
     v-model:open="open"
     title="Add a Note"
@@ -118,7 +153,7 @@
       <div>
         <label class="block text-gray-700">Description</label>
         <a-textarea
-        v-model:value="form.description"
+          v-model:value="form.description"
           placeholder="Add a description for the note."
           :auto-size="{ minRows: 2, maxRows: 5 }"
         />

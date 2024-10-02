@@ -235,6 +235,7 @@ return array(
     'DASPRiD\\Enum\\Exception\\SerializeNotSupportedException' => $vendorDir . '/dasprid/enum/src/Exception/SerializeNotSupportedException.php',
     'DASPRiD\\Enum\\Exception\\UnserializeNotSupportedException' => $vendorDir . '/dasprid/enum/src/Exception/UnserializeNotSupportedException.php',
     'DASPRiD\\Enum\\NullValue' => $vendorDir . '/dasprid/enum/src/NullValue.php',
+    'Database\\Factories\\NoteFactory' => $baseDir . '/database/factories/NoteFactory.php',
     'Database\\Factories\\UserFactory' => $baseDir . '/database/factories/UserFactory.php',
     'Database\\Seeders\\DatabaseSeeder' => $baseDir . '/database/seeders/DatabaseSeeder.php',
     'DateError' => $vendorDir . '/symfony/polyfill-php83/Resources/stubs/DateError.php',

@@ -11,6 +11,10 @@ class Kernel extends ConsoleKernel
 
     protected $commands = [
         Commands\ListNotes::class,
+        Commands\ListAllNotes::class,
+        Commands\EditNote::class,
+        Commands\DeleteNote::class,
+        Commands\AddNote::class,
     ];
 
 

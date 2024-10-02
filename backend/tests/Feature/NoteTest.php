@@ -42,4 +42,12 @@ class NoteTest extends TestCase
         $response->assertStatus(200)
             ->assertJsonCount(3);
     }
+
+    public function test_guest_cannot_access_protected_routes()
+    {
+        // Attempt to access the list of notes without authentication
+        $response = $this->getJson('/api/notes');
+
+        $response->assertStatus(401); // 401 Unauthorized
+    }
 }

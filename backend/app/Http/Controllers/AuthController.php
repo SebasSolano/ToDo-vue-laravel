@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    // Registro de usuario
+    // User registration
     public function register(Request $request)
     {
         $request->validate([
@@ -28,7 +28,7 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 201);
     }
 
-    // Login de usuario
+    // User login
     public function login(Request $request)
     {
         $request->validate([
@@ -39,7 +39,7 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Credenciales incorrectas'], 401);
+            return response()->json(['message' => 'Incorrect credentials'], 401);
         }
 
         $token = $user->createToken('token-personal')->plainTextToken;
@@ -47,12 +47,12 @@ class AuthController extends Controller
         return response()->json(['token' => $token], 200);
     }
 
-    // Logout de usuario
+    // User logout
     public function logout(Request $request)
     {
-        // Revoca el token que se usó para autenticar la solicitud actual
+        // Revoke the token used to authenticate the current request
         $request->user()->currentAccessToken()->delete();
 
-        return response()->json(['message' => 'Sesión cerrada correctamente'], 200);
+        return response()->json(['message' => 'Session closed successfully'], 200);
     }
 }

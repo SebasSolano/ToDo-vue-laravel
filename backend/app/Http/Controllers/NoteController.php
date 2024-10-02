@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class NoteController extends Controller
 {
-    // Crear nota
+    // Create note
     public function store(Request $request)
     {
         $request->validate([
@@ -31,7 +31,7 @@ class NoteController extends Controller
         return response()->json($note, 201);
     }
 
-    // Listar notas
+    // List notes
     public function index(Request $request)
     {
         $sortBy = $request->query('sortBy', 'created_at');
@@ -43,7 +43,7 @@ class NoteController extends Controller
         return response()->json($notes, 200);
     }
 
-    // Mostrar nota por ID
+    // Show note by ID
     public function show($id)
     {
         $note = Note::where('id', $id)
@@ -57,9 +57,9 @@ class NoteController extends Controller
     {
         $currentUser = Auth::user();
 
-        // Verificar si el usuario es administrador
+        // Check if the user is an administrator
         if (!$currentUser->is_admin) {
-            return response()->json(['message' => 'No autorizado.'], 403);
+            return response()->json(['message' => 'Unauthorized.'], 403);
         }
 
         $notes = Note::where('user_id', $userId)->get();
@@ -67,7 +67,7 @@ class NoteController extends Controller
         return response()->json($notes, 200);
     }
 
-    // Actualizar nota
+    // Update note
     public function update(Request $request, $id)
     {
         $note = Note::where('id', $id)
@@ -87,7 +87,7 @@ class NoteController extends Controller
         return response()->json($note, 200);
     }
 
-    // Eliminar nota
+    // Delete note
     public function destroy($id)
     {
         $note = Note::where('id', $id)
@@ -96,6 +96,6 @@ class NoteController extends Controller
 
         $note->delete();
 
-        return response()->json(['message' => 'Nota eliminada'], 200);
+        return response()->json(['message' => 'Note deleted'], 200);
     }
 }

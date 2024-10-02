@@ -2,6 +2,7 @@
   import { ref, reactive } from "vue";
   import { useRouter } from "vue-router";
   import { message } from "ant-design-vue";
+  import { login } from "../../api/api";
 
   const router = useRouter();
   const isLoading = ref(false);
@@ -14,15 +15,13 @@
     event.preventDefault();
     isLoading.value = true;
     try {
-        message.success("Logged in successfully!");
-      setTimeout(() => {
-        isLoading.value = false;
-        router.push("/");
-      }, 1000);
+      await login(form.email, form.password);
+      message.success("Login successful");
+      router.push("/");
     } catch (error) {
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 1000);
+      message.error("Login error: " + error.message);
+    } finally {
+      isLoading.value = false;
     }
   }
 </script>

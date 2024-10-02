@@ -38,34 +38,35 @@
     open.value = true;
   };
 
-  const handleOk = () => {
+  const handleOk = async () => {
     confirmLoading.value = true;
     const date = dayjs(form.dueDate).format("YYYY-MM-DD");
 
     const note = {
-      id: props.notes?.id || Date.now(),
+      id: props.notes?.id,
       title: form.title,
       description: form.description,
       dueDate: date,
-      user: form.user,
       tags: form.tags,
-      createdAt: props.notes?.createdAt || dayjs().format("YYYY-MM-DD"),
+      status: props.notes?.status || "active",
     };
 
-    if (props.notes) {
-      console.log("Updated note to be saved:", note);
-      store.dispatch("editNote", note);
-      message.success("Note edited successfully");
-    } else {
-      store.dispatch("addNote", note);
-      message.success("Note added successfully");
-    }
-
-    setTimeout(() => {
+    try {
+      if (props.notes) {
+        await store.dispatch("editNote", note);
+        message.success("Note edited successfully");
+      } else {
+        await store.dispatch("addNote", note);
+        message.success("Note added successfully");
+      }
       resetForm();
       open.value = false;
+    } catch (error) {
+      message.error("Error saving the note");
+      console.error(error);
+    } finally {
       confirmLoading.value = false;
-    }, 1000);
+    }
   };
 
   const handleClose = (removedTag) => {

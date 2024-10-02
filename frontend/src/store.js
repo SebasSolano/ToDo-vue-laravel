@@ -1,6 +1,11 @@
-// src/store.js
 import { createStore } from "vuex";
 import dayjs from "dayjs";
+import {
+  getNotes,
+  createNote,
+  updateNote,
+  deleteNote as deleteNoteAPI,
+} from "./api/api";
 
 export default createStore({
   state: {
@@ -11,61 +16,114 @@ export default createStore({
     },
   },
   mutations: {
+    SET_NOTES(state, notes) {
+      state.notes = notes;
+    },
     ADD_NOTE(state, note) {
-      note.state = "active";
       state.notes.active.push(note);
     },
     MOVE_NOTE(state, { note, from, to }) {
-      const index = state.notes[from].indexOf(note);
+      const index = state.notes[from].findIndex((n) => n.id === note.id);
       if (index !== -1) {
         state.notes[from].splice(index, 1);
-        note.state = to;
         state.notes[to].push(note);
       }
     },
     EDIT_NOTE(state, updatedNote) {
-      console.log("EDIT_NOTE called with:", updatedNote);
       const lists = ["active", "completed", "expired"];
       for (const list of lists) {
         const index = state.notes[list].findIndex(
           (note) => note.id === updatedNote.id
         );
         if (index !== -1) {
-          console.log(`Found note in ${list} at index ${index}`);
-          state.notes[list].splice(index, 1, { ...updatedNote });
+          if (list !== updatedNote.status) {
+            state.notes[list].splice(index, 1);
+            state.notes[updatedNote.status].push(updatedNote);
+          } else {
+            state.notes[list].splice(index, 1, updatedNote);
+          }
           break;
         }
       }
     },
     DELETE_NOTE(state, note) {
-      const index = state.notes.expired.indexOf(note);
+      const index = state.notes[note.status].findIndex((n) => n.id === note.id);
       if (index !== -1) {
-        state.notes.expired.splice(index, 1);
+        state.notes[note.status].splice(index, 1);
       }
     },
   },
   actions: {
-    addNote({ commit, dispatch }, note) {
-      commit("ADD_NOTE", note);
-      dispatch("checkExpiredNotes");
+    async fetchNotes({ commit }) {
+      try {
+        const notes = await getNotes();
+
+        const organizedNotes = {
+          active: [],
+          completed: [],
+          expired: [],
+        };
+        notes.forEach((note) => {
+          organizedNotes[note.status].push(note);
+        });
+        commit("SET_NOTES", organizedNotes);
+      } catch (error) {
+        console.error("Error fetching notes:", error);
+      }
     },
-    moveNote({ commit }, payload) {
-      commit("MOVE_NOTE", payload);
+    async addNote({ commit }, note) {
+      try {
+        const newNote = await createNote({
+          title: note.title,
+          description: note.description,
+          expiration_date: note.dueDate,
+          tags: note.tags,
+          status: "active",
+        });
+        commit("ADD_NOTE", newNote);
+      } catch (error) {
+        console.error("Error adding the note:", error);
+      }
     },
-    deleteNote({ commit }, note) {
-      commit("DELETE_NOTE", note);
+    async moveNote({ commit }, { note, from, to }) {
+      try {
+        const updatedNote = await updateNote(note.id, {
+          status: to,
+        });
+        commit("MOVE_NOTE", { note: updatedNote, from, to });
+      } catch (error) {
+        console.error("Error moving the note:", error);
+      }
     },
-    editNote({ commit }, note) {
-      console.log("editNote action called with:", note);
-      commit("EDIT_NOTE", note);
+    async deleteNote({ commit }, note) {
+      try {
+        await deleteNoteAPI(note.id);
+        commit("DELETE_NOTE", note);
+      } catch (error) {
+        console.error("Error deleting the note:", error);
+      }
     },
-    checkExpiredNotes({ state, commit }) {
+    async editNote({ commit }, note) {
+      try {
+        const updatedNote = await updateNote(note.id, {
+          title: note.title,
+          description: note.description,
+          expiration_date: note.dueDate,
+          tags: note.tags,
+          status: note.status,
+        });
+        commit("EDIT_NOTE", updatedNote);
+      } catch (error) {
+        console.error("Error editing the note:", error);
+      }
+    },
+    async checkExpiredNotes({ state, dispatch }) {
       const now = dayjs().format("YYYY-MM-DD");
-      state.notes.active.forEach((note) => {
-        if (dayjs(note.dueDate).isBefore(now)) {
-          commit("MOVE_NOTE", { note, from: "active", to: "expired" });
+      for (const note of state.notes.active) {
+        if (dayjs(note.expiration_date).isBefore(now)) {
+          await dispatch("moveNote", { note, from: "active", to: "expired" });
         }
-      });
+      }
     },
   },
   getters: {

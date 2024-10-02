@@ -7,28 +7,29 @@
 
   const store = useStore();
 
-  // Getters de notas
+  // Getters for notes
   const activeNotes = computed(() => store.getters.activeNotes);
   const completedNotes = computed(() => store.getters.completedNotes);
   const expiredNotes = computed(() => store.getters.expiredNotes);
 
-// Verificar si la nota está expirada
-const checkExpiredNotes = () => {
-  const now = dayjs().format("YYYY-MM-DD");
-  activeNotes.value.forEach(note => {
-    if (dayjs(note.dueDate).isBefore(now)) {
-      store.dispatch("moveNote", { note, from: "active", to: "expired" });
-    }
+
+  const checkExpiredNotes = () => {
+    const now = dayjs().format("YYYY-MM-DD");
+    activeNotes.value.forEach((note) => {
+      if (dayjs(note.dueDate).isBefore(now)) {
+        store.dispatch("moveNote", { note, from: "active", to: "expired" });
+      }
+    });
+  };
+
+
+  onMounted(() => {
+    store.dispatch("fetchNotes").then(() => {
+      checkExpiredNotes();
+    });
   });
-};
 
-// Ejecutar al montar el componente
-onMounted(() => {
-  checkExpiredNotes();
-});
-
-
-  // Manejadores de eventos para drag and drop
+  // Event handlers for drag and drop
   let draggedNote = null;
   let draggedFrom = null;
 

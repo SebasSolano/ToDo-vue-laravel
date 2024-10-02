@@ -52,8 +52,10 @@
 
     try {
       if (props.notes) {
+
         await store.dispatch("editNote", note);
         message.success("Note edited successfully");
+
       } else {
         await store.dispatch("addNote", note);
         message.success("Note added successfully");

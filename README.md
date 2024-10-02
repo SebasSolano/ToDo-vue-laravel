@@ -18,8 +18,7 @@ Este repositorio contiene una aplicación de tareas ("ToDo") desarrollada con un
 - [Funciones Principales](#funciones-principales)
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
-- [Contribución](#contribución)
-- [Licencia](#licencia)
+
 
 ## Tecnologías Utilizadas
 

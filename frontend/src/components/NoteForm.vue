@@ -43,7 +43,6 @@
     const date = dayjs(form.dueDate).format("YYYY-MM-DD");
 
     const note = {
-      id: props.notes?.id,
       title: form.title,
       description: form.description,
       dueDate: date,

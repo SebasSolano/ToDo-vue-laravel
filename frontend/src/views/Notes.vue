@@ -13,9 +13,7 @@
   const expiredNotes = computed(() => store.getters.expiredNotes);
 
   onMounted(() => {
-    store.dispatch("fetchNotes").then(() => {
-      store.dispatch("checkExpiredNotes");
-    });
+    store.dispatch("fetchNotes");
   });
 
   // Event handlers for drag and drop

@@ -39,7 +39,8 @@
       <div class="grid gap-2">
         <div class="grid gap-1">
           <label for="email"> Name </label>
-          <a-input
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
             v-model="name"
             id="name"
             placeholder="Name"
@@ -51,7 +52,8 @@
             required
           />
           <label for="email"> Email </label>
-          <a-input
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
             v-model="email"
             id="email"
             placeholder="Email"
@@ -63,7 +65,8 @@
             required
           />
           <label for="password"> Password </label>
-          <a-input-password
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
             v-model="password"
             id="password"
             placeholder="Password"
@@ -74,10 +77,9 @@
             :disabled="isLoading"
             required
           />
-        </div>
-        <div>
           <label for="password"> Confirm Password </label>
-          <a-input-password
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
             v-model="confPassword"
             id="confPassword"
             placeholder="Confirm Password"

@@ -10,7 +10,6 @@
   const email = ref("");
   const password = ref("");
 
-
   async function onSubmit(event) {
     console.log("testo xd", email.value, password.value);
     event.preventDefault();
@@ -35,6 +34,7 @@
           <label for="email"> Email </label>
           <input
             v-model="email"
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-300 text-sm"
             id="email"
             placeholder="Email"
             type="email"
@@ -47,6 +47,7 @@
 
           <label for="password"> Password </label>
           <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-300 text-sm"
             v-model="password"
             id="password"
             placeholder="Password"

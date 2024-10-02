@@ -54,7 +54,7 @@ export default createStore({
     },
   },
   actions: {
-    async fetchNotes({ commit }) {
+    async fetchNotes({ commit, dispatch }) {
       try {
         const notes = await getNotes();
 
@@ -67,11 +67,13 @@ export default createStore({
           organizedNotes[note.status].push(note);
         });
         commit("SET_NOTES", organizedNotes);
+
+        await dispatch("checkExpiredNotes");
       } catch (error) {
         console.error("Error fetching notes:", error);
       }
     },
-    async addNote({ commit }, note) {
+    async addNote({ commit, dispatch }, note) {
       try {
         const newNote = await createNote({
           title: note.title,
@@ -80,6 +82,7 @@ export default createStore({
           tags: note.tags,
           status: "active",
         });
+        await dispatch("checkExpiredNotes");
         commit("ADD_NOTE", newNote);
       } catch (error) {
         console.error("Error adding the note:", error);
@@ -103,7 +106,7 @@ export default createStore({
         console.error("Error deleting the note:", error);
       }
     },
-    async editNote({ commit }, note) {
+    async editNote({ commit, dispatch }, note) {
       try {
         const updatedNote = await updateNote(note.id, {
           title: note.title,
@@ -113,6 +116,8 @@ export default createStore({
           status: note.status,
         });
         commit("EDIT_NOTE", updatedNote);
+
+        await dispatch("checkExpiredNotes");
       } catch (error) {
         console.error("Error editing the note:", error);
       }

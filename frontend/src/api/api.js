@@ -36,7 +36,6 @@ export const register = async (name, email, password) => {
       password,
     });
     const token = response.data.token;
-    localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
     throw error.response.data;

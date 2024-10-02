@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Configure the base URL of the API
-const API_BASE_URL = "todo-vue-laravel-production.up.railway.app";
+const API_BASE_URL = "todo-vue-laravel-production.up.railway.app/api";
 
 // Create an instance of Axios
 const apiClient = axios.create({

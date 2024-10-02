@@ -1,9 +1,9 @@
 import axios from "axios";
 
-// Configurar la URL base de la API
-const API_BASE_URL = "http://127.0.0.1:8000/api"; // Reemplaza con la URL de tu API
+// Configure the base URL of the API
+const API_BASE_URL = "todo-vue-laravel-production.up.railway.app/api";
 
-// Crear una instancia de Axios
+// Create an instance of Axios
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -11,12 +11,12 @@ const apiClient = axios.create({
   },
 });
 
-// Interceptor para agregar el token de autenticación en cada petición
+// Interceptor to add the authentication token to each request
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token"); // Obtener el token del localStorage
+    const token = localStorage.getItem("token");
     if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`; // Agregar el token al header
+      config.headers["Authorization"] = `Bearer ${token}`;
     }
     return config;
   },
@@ -25,9 +25,9 @@ apiClient.interceptors.request.use(
   }
 );
 
-// Funciones para interactuar con la API
+// Functions to interact with the API
 
-// Registro de usuario
+// User registration
 export const register = async (name, email, password) => {
   try {
     const response = await apiClient.post("/register", {
@@ -36,14 +36,14 @@ export const register = async (name, email, password) => {
       password,
     });
     const token = response.data.token;
-    localStorage.setItem("token", token); // Guardar el token en localStorage
+    localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
     throw error.response.data;
   }
 };
 
-// Login de usuario
+// User login
 export const login = async (email, password) => {
   try {
     const response = await apiClient.post("/login", {
@@ -51,25 +51,25 @@ export const login = async (email, password) => {
       password,
     });
     const token = response.data.token;
-    localStorage.setItem("token", token); // Guardar el token en localStorage
+    localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
     throw error.response.data;
   }
 };
 
-// Logout de usuario
+// User logout
 export const logout = async () => {
   try {
     const response = await apiClient.post("/logout");
-    localStorage.removeItem("token"); // Eliminar el token de localStorage
+    localStorage.removeItem("token");
     return response.data;
   } catch (error) {
     throw error.response.data;
   }
 };
 
-// Obtener todas las notas del usuario autenticado
+// Get all notes of the authenticated user
 export const getNotes = async (sortBy = "created_at") => {
   try {
     const response = await apiClient.get("/notes", {
@@ -81,7 +81,7 @@ export const getNotes = async (sortBy = "created_at") => {
   }
 };
 
-// Obtener una nota por ID
+// Get a note by ID
 export const getNoteById = async (id) => {
   try {
     const response = await apiClient.get(`/notes/${id}`);
@@ -91,7 +91,7 @@ export const getNoteById = async (id) => {
   }
 };
 
-// Crear una nueva nota
+// Create a new note
 export const createNote = async (noteData) => {
   try {
     const response = await apiClient.post("/notes", noteData);
@@ -101,7 +101,7 @@ export const createNote = async (noteData) => {
   }
 };
 
-// Actualizar una nota existente
+// Update an existing note
 export const updateNote = async (id, noteData) => {
   try {
     const response = await apiClient.put(`/notes/${id}`, noteData);
@@ -111,7 +111,7 @@ export const updateNote = async (id, noteData) => {
   }
 };
 
-// Eliminar una nota
+// Delete a note
 export const deleteNote = async (id) => {
   try {
     const response = await apiClient.delete(`/notes/${id}`);
@@ -121,7 +121,7 @@ export const deleteNote = async (id) => {
   }
 };
 
-// Obtener notas de un usuario específico por su ID
+// Get notes of a specific user by their ID
 export const getNotesByUserId = async (userId) => {
   try {
     const response = await apiClient.get(`/users/${userId}/notes`);

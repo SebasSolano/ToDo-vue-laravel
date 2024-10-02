@@ -9,17 +9,13 @@ Este repositorio contiene una aplicación de tareas ("ToDo") desarrollada con un
 - [Instalación](#instalación)
   - [Backend (Laravel)](#backend-laravel)
   - [Frontend (Vue.js)](#frontend-vuejs)
-- [Configuración](#configuración)
-  - [Configuración del Backend](#configuración-del-backend)
-  - [Configuración del Frontend](#configuración-del-frontend)
 - [Ejecución](#ejecución)
   - [Ejecutar el Backend](#ejecutar-el-backend)
   - [Ejecutar el Frontend](#ejecutar-el-frontend)
 - [Funciones Principales](#funciones-principales)
 - [API Endpoints](#api-endpoints)
 - [Testing](#testing)
-- [Contribución](#contribución)
-- [Licencia](#licencia)
+
 
 ## Tecnologías Utilizadas
 

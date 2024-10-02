@@ -1,26 +1,28 @@
 <script setup>
-  import { ref, reactive } from "vue";
+  import { ref } from "vue";
   import { useRouter } from "vue-router";
   import { message } from "ant-design-vue";
   import { register } from "../../api/api";
 
   const router = useRouter();
   const isLoading = ref(false);
-  const form = reactive({
-    name: "",
-    email: "",
-    password: "",
-    confPassword: "",
-  });
+  const name = ref("");
+  const email = ref("");
+  const password = ref("");
+  const confPassword = ref("");
+
   async function onSubmit(event) {
+    console.log(name.value, email.value, password.value);
     event.preventDefault();
     isLoading.value = true;
+
     try {
-      if (form.password !== form.confPassword) {
+      if (password.value !== confPassword.value) {
         message.error("Passwords do not match");
         return;
       }
-      await register(form.name, form.email, form.password);
+
+      await register(name.value, email.value, password.value);
       message.success("Registration successful");
       router.push("/auth");
     } catch (error) {
@@ -38,7 +40,7 @@
         <div class="grid gap-1">
           <label for="email"> Name </label>
           <a-input
-            v-model="form.name"
+            v-model="name"
             id="name"
             placeholder="Name"
             type="name"
@@ -50,7 +52,7 @@
           />
           <label for="email"> Email </label>
           <a-input
-            v-model="form.email"
+            v-model="email"
             id="email"
             placeholder="Email"
             type="email"
@@ -62,7 +64,7 @@
           />
           <label for="password"> Password </label>
           <a-input-password
-            v-model="form.password"
+            v-model="password"
             id="password"
             placeholder="Password"
             type="password"
@@ -76,7 +78,7 @@
         <div>
           <label for="password"> Confirm Password </label>
           <a-input-password
-            v-model="form.confPassword"
+            v-model="confPassword"
             id="confPassword"
             placeholder="Confirm Password"
             type="password"

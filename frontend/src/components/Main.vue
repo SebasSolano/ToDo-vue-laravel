@@ -1,6 +1,6 @@
 <script setup>
   import NoteForm from "./NoteForm.vue";
-  import { UserOutlined, LogoutOutlined } from "@ant-design/icons-vue";
+  import { LogoutOutlined } from "@ant-design/icons-vue";
   import { useRouter } from "vue-router";
   import { logout } from "../api/api";
 
@@ -24,9 +24,6 @@
       <h1 class="font-semibold text-xl p-2 border-2 border-black text">
         N O T E S
       </h1>
-      <h3 class="flex items-center justify-start space-x-1">
-        <UserOutlined /> <span>name</span>
-      </h3>
     </div>
     <div class="flex items-center justify-between space-x-3 p-4">
       <NoteForm />

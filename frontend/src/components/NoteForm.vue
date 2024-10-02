@@ -25,10 +25,10 @@
   const store = useStore();
 
   const form = reactive({
+    id: 0,
     title: "",
     description: "",
     dueDate: "",
-    user: "",
     tags: [],
     inputVisible: false,
     inputValue: "",
@@ -40,12 +40,14 @@
 
   const handleOk = async () => {
     confirmLoading.value = true;
-    const date = dayjs(form.dueDate).format("YYYY-MM-DD");
+    const expirationDate = dayjs(form.dueDate).format("YYYY-MM-DD");
+    console.log(expirationDate)
 
     const note = {
+      id: form.id > 0 ? form.id : null,
       title: form.title,
       description: form.description,
-      dueDate: date,
+      expiration_date: expirationDate,
       tags: form.tags,
       status: props.notes?.status || "active",
     };
@@ -97,17 +99,16 @@
     form.title = "";
     form.description = "";
     form.dueDate = "";
-    form.user = "";
     form.tags = [];
   };
 
   onMounted(() => {
     if (props.notes) {
-      const date = dayjs(props.notes.dueDate, "YYYY-MM-DD");
-
+      console.log(props.notes);
+      form.id = props.notes.id;
       form.title = props.notes.title;
       form.description = props.notes.description;
-      form.dueDate = date;
+      form.dueDate = dayjs(props.notes.expiration_date);
       form.user = props.notes.user;
       form.tags = props.notes.tags;
     }
@@ -157,19 +158,6 @@
           placeholder="Add a description for the note."
           :auto-size="{ minRows: 2, maxRows: 5 }"
         />
-      </div>
-      <div>
-        <label class="block text-gray-700">User</label>
-        <a-input v-model:value="form.user" placeholder="User">
-          <template #prefix>
-            <user-outlined />
-          </template>
-          <template #suffix>
-            <a-tooltip title="Add the user in charge">
-              <info-circle-outlined style="color: rgba(0, 0, 0, 0.45)" />
-            </a-tooltip>
-          </template>
-        </a-input>
       </div>
       <div>
         <label class="block text-gray-700">Expiration</label>

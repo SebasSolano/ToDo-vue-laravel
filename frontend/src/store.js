@@ -76,7 +76,7 @@ export default createStore({
         const newNote = await createNote({
           title: note.title,
           description: note.description,
-          expiration_date: note.dueDate,
+          expiration_date: note.expiration_date,
           tags: note.tags,
           status: "active",
         });
@@ -108,7 +108,7 @@ export default createStore({
         const updatedNote = await updateNote(note.id, {
           title: note.title,
           description: note.description,
-          expiration_date: note.dueDate,
+          expiration_date: note.expiration_date,
           tags: note.tags,
           status: note.status,
         });
@@ -118,12 +118,18 @@ export default createStore({
       }
     },
     async checkExpiredNotes({ state, dispatch }) {
-      const now = dayjs().format("YYYY-MM-DD");
+      const now = dayjs().startOf("day");
+      const promises = [];
+
       for (const note of state.notes.active) {
-        if (dayjs(note.expiration_date).isBefore(now)) {
-          await dispatch("moveNote", { note, from: "active", to: "expired" });
+        const expirationDate = dayjs(note.expiration_date);
+        if (expirationDate.isBefore(now, "day")) {
+          promises.push(
+            dispatch("moveNote", { note, from: "active", to: "expired" })
+          );
         }
       }
+      await Promise.all(promises);
     },
   },
   getters: {

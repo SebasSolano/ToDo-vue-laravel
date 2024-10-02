@@ -1,0 +1,22 @@
+
+# render.yaml
+
+services:
+  - type: web
+    name: backend-api
+    env: php
+    plan: starter
+    buildCommand: composer install --optimize-autoloader --no-dev && npm install && npm run prod && php artisan config:cache && php artisan route:cache && php artisan view:cache
+    startCommand: php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: APP_KEY
+        value: YOUR_APP_KEY
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_URL
+        value: https://your-app.onrender.com
+    autoscaling:
+      minInstances: 1
+      maxInstances: 1

@@ -1,6 +1,20 @@
 <script setup>
   import NoteForm from "./NoteForm.vue";
   import { UserOutlined, LogoutOutlined } from "@ant-design/icons-vue";
+  import { useRouter } from "vue-router";
+  import { logout } from "../api/api";
+
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      localStorage.removeItem("token");
+      router.push("/auth");
+    } catch (error) {
+      console.error("Error closing session:", error);
+    }
+  };
 </script>
 <template>
   <div
@@ -16,7 +30,9 @@
     </div>
     <div class="flex items-center justify-between space-x-3 p-4">
       <NoteForm />
-      <a-button class="flex items-center justify-center space-x-1"
+      <a-button
+        @click="handleLogout"
+        class="flex items-center justify-center space-x-1"
         >Logout <LogoutOutlined
       /></a-button>
     </div>

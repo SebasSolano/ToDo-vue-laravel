@@ -2,6 +2,7 @@
   import { ref, reactive } from "vue";
   import { useRouter } from "vue-router";
   import { message } from "ant-design-vue";
+  import { register } from "../../api/api";
 
   const router = useRouter();
   const isLoading = ref(false);
@@ -11,25 +12,21 @@
     password: "",
     confPassword: "",
   });
-
   async function onSubmit(event) {
     event.preventDefault();
     isLoading.value = true;
     try {
       if (form.password !== form.confPassword) {
         message.error("Passwords do not match");
-        isLoading.value = false;
         return;
       }
-      message.success("You have registered successfully!");
-      setTimeout(() => {
-        isLoading.value = false;
-        router.push("/auth");
-      }, 1000);
+      await register(form.name, form.email, form.password);
+      message.success("Registration successful");
+      router.push("/auth");
     } catch (error) {
-      setTimeout(() => {
-        isLoading.value = false;
-      }, 1000);
+      message.error("Registration error: " + error.message);
+    } finally {
+      isLoading.value = false;
     }
   }
 </script>

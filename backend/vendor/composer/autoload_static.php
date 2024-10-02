@@ -360,8 +360,8 @@ class ComposerStaticInit29181e550158471d47faccab78d0c165
         ),
         'Psr\\Http\\Message\\' => 
         array (
-            0 => __DIR__ . '/..' . '/psr/http-factory/src',
-            1 => __DIR__ . '/..' . '/psr/http-message/src',
+            0 => __DIR__ . '/..' . '/psr/http-message/src',
+            1 => __DIR__ . '/..' . '/psr/http-factory/src',
         ),
         'Psr\\Http\\Client\\' => 
         array (
@@ -563,6 +563,10 @@ class ComposerStaticInit29181e550158471d47faccab78d0c165
         'App\\Actions\\Fortify\\UpdateUserPassword' => __DIR__ . '/../..' . '/app/Actions/Fortify/UpdateUserPassword.php',
         'App\\Actions\\Fortify\\UpdateUserProfileInformation' => __DIR__ . '/../..' . '/app/Actions/Fortify/UpdateUserProfileInformation.php',
         'App\\Commands\\DefaultCommand' => __DIR__ . '/..' . '/laravel/pint/app/Commands/DefaultCommand.php',
+        'App\\Console\\Commands\\AddNote' => __DIR__ . '/../..' . '/app/Console/Commands/AddNote.php',
+        'App\\Console\\Commands\\DeleteNote' => __DIR__ . '/../..' . '/app/Console/Commands/DeleteNote.php',
+        'App\\Console\\Commands\\EditNote' => __DIR__ . '/../..' . '/app/Console/Commands/EditNote.php',
+        'App\\Console\\Commands\\ListAllNotes' => __DIR__ . '/../..' . '/app/Console/Commands/ListAllNotes.php',
         'App\\Console\\Commands\\ListNotes' => __DIR__ . '/../..' . '/app/Console/Commands/ListNotes.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Contracts\\PathsRepository' => __DIR__ . '/..' . '/laravel/pint/app/Contracts/PathsRepository.php',

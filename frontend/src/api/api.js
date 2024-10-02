@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Configure the base URL of the API
-const API_BASE_URL = "todo-vue-laravel-production.up.railway.app/api";
+const API_BASE_URL = "https://todo-vue-laravel-production.up.railway.app/api";
 
 // Create an instance of Axios
 const apiClient = axios.create({
@@ -36,7 +36,6 @@ export const register = async (name, email, password) => {
       password,
     });
     const token = response.data.token;
-    localStorage.setItem("token", token);
     return response.data;
   } catch (error) {
     throw error.response.data;

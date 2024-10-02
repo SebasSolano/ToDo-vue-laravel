@@ -1,26 +1,28 @@
 <script setup>
-  import { ref, reactive } from "vue";
+  import { ref } from "vue";
   import { useRouter } from "vue-router";
   import { message } from "ant-design-vue";
   import { register } from "../../api/api";
 
   const router = useRouter();
   const isLoading = ref(false);
-  const form = reactive({
-    name: "",
-    email: "",
-    password: "",
-    confPassword: "",
-  });
+  const name = ref("");
+  const email = ref("");
+  const password = ref("");
+  const confPassword = ref("");
+
   async function onSubmit(event) {
+    console.log(name.value, email.value, password.value);
     event.preventDefault();
     isLoading.value = true;
+
     try {
-      if (form.password !== form.confPassword) {
+      if (password.value !== confPassword.value) {
         message.error("Passwords do not match");
         return;
       }
-      await register(form.name, form.email, form.password);
+
+      await register(name.value, email.value, password.value);
       message.success("Registration successful");
       router.push("/auth");
     } catch (error) {
@@ -37,8 +39,9 @@
       <div class="grid gap-2">
         <div class="grid gap-1">
           <label for="email"> Name </label>
-          <a-input
-            v-model="form.name"
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
+            v-model="name"
             id="name"
             placeholder="Name"
             type="name"
@@ -49,8 +52,9 @@
             required
           />
           <label for="email"> Email </label>
-          <a-input
-            v-model="form.email"
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
+            v-model="email"
             id="email"
             placeholder="Email"
             type="email"
@@ -61,8 +65,9 @@
             required
           />
           <label for="password"> Password </label>
-          <a-input-password
-            v-model="form.password"
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
+            v-model="password"
             id="password"
             placeholder="Password"
             type="password"
@@ -72,11 +77,10 @@
             :disabled="isLoading"
             required
           />
-        </div>
-        <div>
           <label for="password"> Confirm Password </label>
-          <a-input-password
-            v-model="form.confPassword"
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-500 text-sm"
+            v-model="confPassword"
             id="confPassword"
             placeholder="Confirm Password"
             type="password"

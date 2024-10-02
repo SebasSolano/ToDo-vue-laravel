@@ -12,21 +12,8 @@
   const completedNotes = computed(() => store.getters.completedNotes);
   const expiredNotes = computed(() => store.getters.expiredNotes);
 
-
-  const checkExpiredNotes = () => {
-    const now = dayjs().format("YYYY-MM-DD");
-    activeNotes.value.forEach((note) => {
-      if (dayjs(note.dueDate).isBefore(now)) {
-        store.dispatch("moveNote", { note, from: "active", to: "expired" });
-      }
-    });
-  };
-
-
   onMounted(() => {
-    store.dispatch("fetchNotes").then(() => {
-      checkExpiredNotes();
-    });
+    store.dispatch("fetchNotes");
   });
 
   // Event handlers for drag and drop
@@ -106,10 +93,10 @@
 
           <div class="flex flex-col items-end space-y-2">
             <small class="bg-green-100 p-2 rounded cursor-pointer"
-              >Created: {{ note.createdAt }}</small
+              >Created: {{ dayjs(note.created_at).format("YYYY-MM-DD") }}</small
             >
             <small class="bg-red-100 p-2 rounded cursor-pointer"
-              >Due: {{ note.dueDate }}</small
+              >Due: {{ note.expiration_date }}</small
             >
           </div>
         </div>
@@ -149,10 +136,10 @@
 
           <div class="flex flex-col items-end space-y-2">
             <small class="bg-green-100 p-2 rounded cursor-pointer"
-              >Created: {{ note.createdAt }}</small
+              >Created: {{ dayjs(note.created_at).format("YYYY-MM-DD") }}</small
             >
             <small class="bg-red-100 p-2 rounded cursor-pointer"
-              >Due: {{ note.dueDate }}</small
+              >Due: {{ note.expiration_date }}</small
             >
           </div>
         </div>
@@ -200,10 +187,10 @@
 
           <div class="flex flex-col items-end space-y-2">
             <small class="bg-green-100 p-2 rounded cursor-pointer"
-              >Created: {{ note.createdAt }}</small
+              >Created: {{ dayjs(note.created_at).format("YYYY-MM-DD") }}</small
             >
             <small class="bg-red-100 p-2 rounded cursor-pointer"
-              >Due: {{ note.dueDate }}</small
+              >Due: {{ note.expiration_date }}</small
             >
           </div>
         </div>

@@ -6,16 +6,16 @@
 
   const router = useRouter();
   const isLoading = ref(false);
-  const form = reactive({
-    email: "",
-    password: "",
-  });
+
+  const email = ref("");
+  const password = ref("");
 
   async function onSubmit(event) {
+    console.log("testo xd", email.value, password.value);
     event.preventDefault();
     isLoading.value = true;
     try {
-      await login(form.email, form.password);
+      await login(email.value, password.value);
       message.success("Login successful");
       router.push("/");
     } catch (error) {
@@ -32,8 +32,9 @@
       <div class="grid gap-2">
         <div class="grid gap-1">
           <label for="email"> Email </label>
-          <a-input
-            v-model="form.email"
+          <input
+            v-model="email"
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-300 text-sm"
             id="email"
             placeholder="Email"
             type="email"
@@ -43,9 +44,11 @@
             :disabled="isLoading"
             required
           />
+
           <label for="password"> Password </label>
-          <a-input-password
-            v-model="form.password"
+          <input
+            class="p-2 rounded-lg border-2 focus:border-indigo-500 focus:ring-indigo-500 transition duration-300 text-sm"
+            v-model="password"
             id="password"
             placeholder="Password"
             type="password"

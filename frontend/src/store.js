@@ -54,7 +54,7 @@ export default createStore({
     },
   },
   actions: {
-    async fetchNotes({ commit }) {
+    async fetchNotes({ commit, dispatch }) {
       try {
         const notes = await getNotes();
 
@@ -67,19 +67,22 @@ export default createStore({
           organizedNotes[note.status].push(note);
         });
         commit("SET_NOTES", organizedNotes);
+
+        await dispatch("checkExpiredNotes");
       } catch (error) {
         console.error("Error fetching notes:", error);
       }
     },
-    async addNote({ commit }, note) {
+    async addNote({ commit, dispatch }, note) {
       try {
         const newNote = await createNote({
           title: note.title,
           description: note.description,
-          expiration_date: note.dueDate,
+          expiration_date: note.expiration_date,
           tags: note.tags,
           status: "active",
         });
+        await dispatch("checkExpiredNotes");
         commit("ADD_NOTE", newNote);
       } catch (error) {
         console.error("Error adding the note:", error);
@@ -103,27 +106,35 @@ export default createStore({
         console.error("Error deleting the note:", error);
       }
     },
-    async editNote({ commit }, note) {
+    async editNote({ commit, dispatch }, note) {
       try {
         const updatedNote = await updateNote(note.id, {
           title: note.title,
           description: note.description,
-          expiration_date: note.dueDate,
+          expiration_date: note.expiration_date,
           tags: note.tags,
           status: note.status,
         });
         commit("EDIT_NOTE", updatedNote);
+
+        await dispatch("checkExpiredNotes");
       } catch (error) {
         console.error("Error editing the note:", error);
       }
     },
     async checkExpiredNotes({ state, dispatch }) {
-      const now = dayjs().format("YYYY-MM-DD");
+      const now = dayjs().startOf("day");
+      const promises = [];
+
       for (const note of state.notes.active) {
-        if (dayjs(note.expiration_date).isBefore(now)) {
-          await dispatch("moveNote", { note, from: "active", to: "expired" });
+        const expirationDate = dayjs(note.expiration_date);
+        if (expirationDate.isBefore(now, "day")) {
+          promises.push(
+            dispatch("moveNote", { note, from: "active", to: "expired" })
+          );
         }
       }
+      await Promise.all(promises);
     },
   },
   getters: {
